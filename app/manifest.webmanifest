@@ -1,0 +1,19 @@
+{
+  "name": "Cafeed",
+  "short_name": "Cafeed",
+  "lang": "pt-BR",
+  "description": "Descubra cafeterias, guarde as favoritas e troque dicas com os amigos.",
+  "start_url": "/app/",
+  "scope": "/app/",
+  "display": "standalone",
+  "background_color": "#f7f1ea",
+  "theme_color": "#f7f1ea",
+  "icons": [
+    {
+      "src": "/app/icone.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

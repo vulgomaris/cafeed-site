@@ -64,11 +64,15 @@ section[id], #topo { scroll-margin-top: 96px; }
 .nav a:hover, .nav a[aria-current] { text-decoration: underline; text-decoration-thickness: 2px; }
 .idioma { text-decoration: none; font-family: var(--cartaz); font-weight: 800; font-size: 13px; background: var(--tinta); color: var(--menta); border-radius: 999px; padding: 8px 13px; margin-left: 6px; }
 .idioma:hover { text-decoration: none; background: var(--torra); }
+/* Entrar: abre o app no navegador */
+.entrar { text-decoration: none; font-weight: 700; font-size: 15px; color: var(--tinta); background: var(--menta); border: 2px solid var(--tinta); border-radius: 999px; padding: 6px 14px; margin-left: 8px; white-space: nowrap; }
+.entrar:hover { background: #b3f3dd; }
 .topo-linha .nav { margin-left: auto; }
 /* em tela estreita, o menu vai para uma segunda linha e corre de lado se não couber */
 @media (max-width: 760px) {
   .topo-linha { flex-wrap: wrap; gap: 0 12px; padding-top: 10px; }
-  .topo-linha .idioma { margin-left: auto; }
+  .topo-linha .entrar { margin-left: auto; }
+  .topo-linha .idioma { margin-left: 6px; }
   .topo-linha .nav { order: 3; width: calc(100% + 32px); margin: 0 -16px; padding: 0 10px 6px; overflow-x: auto; flex-wrap: nowrap; justify-content: flex-start; scrollbar-width: none; }
   .topo-linha .nav::-webkit-scrollbar { display: none; }
 }
