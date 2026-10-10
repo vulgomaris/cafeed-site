@@ -194,6 +194,7 @@ section[id], #topo { scroll-margin-top: 96px; }
 .rodape nav a[aria-current] { text-decoration-thickness: 2px; }
 /* Instagram: ícone e @ no rodapé e na página de contato */
 .insta-icone { width: 22px; height: 22px; flex: none; }
+.rodape-redes { display: flex; flex-wrap: wrap; gap: 10px; }
 .rodape-insta { display: inline-flex !important; align-items: center; gap: 8px; font-weight: 700; text-decoration: none; border: 2px solid var(--menta); border-radius: 999px; padding: 6px 14px 6px 10px !important; }
 .rodape-insta:hover { background: var(--menta); color: var(--tinta) !important; }
 .contato-insta { font-size: 17px; }
