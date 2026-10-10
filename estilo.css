@@ -198,7 +198,7 @@ section[id], #topo { scroll-margin-top: 96px; }
 .ofertas { list-style: none; margin: 0 0 36px; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 @media (min-width: 960px) { .ofertas { grid-template-columns: repeat(4, 1fr); } }
 .ofertas li { background: var(--espuma); border-radius: 24px; padding: 26px 24px; }
-.oferta-caneca { width: 64px; height: auto; margin-bottom: 14px; }
+.oferta-caneca { width: auto; height: 64px; margin-bottom: 14px; overflow: visible; }
 .ofertas h3 { font-family: var(--cartaz); font-weight: 800; font-size: 20px; line-height: 1.15; letter-spacing: -0.03em; margin: 0 0 8px; }
 .ofertas p { margin: 0; font-size: 16.5px; line-height: 1.5; color: var(--suave); }
 .botao { display: inline-flex; align-items: center; justify-content: center; min-height: 56px; padding: 12px 26px; border: 0; border-radius: 16px; background: var(--tinta); color: var(--menta); font-family: var(--cartaz); font-weight: 800; font-size: 16px; letter-spacing: -0.01em; text-decoration: none; box-shadow: 4px 4px 0 var(--torra); cursor: pointer; }
