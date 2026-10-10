@@ -118,6 +118,12 @@ section[id], #topo { scroll-margin-top: 96px; }
 .loja span { font-size: 13px; }
 .loja strong { font-family: var(--cartaz); font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
 .lojas-escuras .loja { background: var(--menta); color: var(--tinta); box-shadow: 4px 4px 0 var(--caramelo); }
+/* Usar no navegador: o botão principal, ao lado das lojas */
+.usar { flex: 1 1 100%; max-width: 452px; display: flex; flex-direction: column; justify-content: center; min-height: 64px; padding: 10px 20px; background: var(--espuma); color: var(--tinta); border: 2px solid var(--tinta); border-radius: 16px; line-height: 1.1; box-shadow: 4px 4px 0 var(--tinta); text-decoration: none; transition: transform .12s ease, box-shadow .12s ease; }
+.usar span { font-size: 13px; }
+.usar strong { font-family: var(--cartaz); font-size: 22px; font-weight: 900; letter-spacing: -0.02em; text-transform: uppercase; }
+.usar:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--tinta); text-decoration: none; }
+@media (prefers-reduced-motion: reduce) { .usar { transition: none; } .usar:hover { transform: none; } }
 
 /* ---------- o que dá para fazer: blocos de cor ---------- */
 .recursos { padding: 80px 0; }
