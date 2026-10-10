@@ -51,9 +51,13 @@ a:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; border-r
 @keyframes correr { to { transform: translateX(-50%); } }
 
 /* ---------- topo ---------- */
-.topo { background: var(--menta); color: var(--tinta); }
+.topo { position: sticky; top: 0; z-index: 20; background: var(--espuma); color: var(--tinta); border-bottom: 2px solid var(--tinta); }
+/* as seções não ficam escondidas atrás do menu fixo */
+section[id], #topo { scroll-margin-top: 96px; }
+@media (max-width: 760px) { section[id] { scroll-margin-top: 120px; } }
 .topo-linha { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 76px; }
 .marca { color: var(--torra); display: block; }
+.marca:hover { opacity: 0.85; }
 .marca-logo { width: 118px; height: auto; }
 .nav { display: flex; align-items: center; gap: 2px; }
 .nav a { color: var(--tinta); text-decoration: none; font-weight: 600; font-size: 16px; padding: 10px 10px; white-space: nowrap; }
@@ -143,7 +147,7 @@ a:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; border-r
 .notinha-topo { display: flex; align-items: center; gap: 10px; font-family: var(--cartaz); font-weight: 800; font-size: 15px; letter-spacing: 0.02em; color: var(--torra); padding-bottom: 18px; margin-bottom: 22px; border-bottom: 2px dashed var(--leite); }
 .notinha-simbolo { width: 34px; }
 .notinha p { margin: 0 0 1em; font-size: 17.5px; line-height: 1.65; }
-.notinha p:nth-of-type(1) { font-size: 20px; font-weight: 600; line-height: 1.5; }
+.notinha > p:first-of-type { font-size: 20px; font-weight: 600; line-height: 1.5; }
 .assinatura { display: flex; flex-direction: column; margin-top: 1.4em !important; }
 .assinatura .nomes { font-family: 'Caveat', cursive; font-size: 42px; line-height: 1.05; color: var(--torra); }
 .notinha-fim { margin: 22px 0 0 !important; padding-top: 16px; border-top: 2px dashed var(--leite); text-align: center; font-family: var(--cartaz); font-weight: 700; font-size: 13px !important; color: var(--suave); }
@@ -234,3 +238,15 @@ a:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; border-r
 .opcional { font-weight: 400; color: var(--suave); font-size: 14px; }
 .campo select:disabled { opacity: 0.6; }
 .form-aviso a { color: var(--torra); }
+
+/* "Ler a história toda" na notinha */
+.mais summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-family: var(--cartaz); font-weight: 800; font-size: 14px; color: var(--torra); text-decoration: underline; text-underline-offset: 4px; margin: 0 0 6px; }
+.mais summary::-webkit-details-marker { display: none; }
+.mais summary::after { content: ''; width: 8px; height: 8px; border-right: 2.5px solid currentColor; border-bottom: 2.5px solid currentColor; transform: rotate(45deg) translateY(-3px); transition: transform 0.2s; }
+.mais[open] summary::after { transform: rotate(-135deg) translateY(-1px); }
+.mais .fechar, .mais[open] .abrir { display: none; }
+.mais[open] .fechar { display: inline; }
+.mais summary:focus-visible { outline: 3px solid var(--menta); outline-offset: 3px; border-radius: 6px; }
+.mais[open] { margin-bottom: 4px; }
+
+@media (prefers-color-scheme: dark) { .topo { background: #1c120b; color: #f2e9dc; border-bottom-color: #3d2b1f; } .topo .nav a { color: #f2e9dc; } .marca { color: var(--menta); } .idioma { background: var(--menta); color: var(--tinta); } }
