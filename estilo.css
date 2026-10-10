@@ -192,6 +192,12 @@ section[id], #topo { scroll-margin-top: 96px; }
 .rodape nav { display: flex; flex-wrap: wrap; gap: 4px 20px; }
 .rodape a { color: var(--menta); padding: 6px 0; display: inline-block; }
 .rodape nav a[aria-current] { text-decoration-thickness: 2px; }
+/* Instagram: ícone e @ no rodapé e na página de contato */
+.insta-icone { width: 22px; height: 22px; flex: none; }
+.rodape-insta { display: inline-flex !important; align-items: center; gap: 8px; font-weight: 700; text-decoration: none; border: 2px solid var(--menta); border-radius: 999px; padding: 6px 14px 6px 10px !important; }
+.rodape-insta:hover { background: var(--menta); color: var(--tinta) !important; }
+.contato-insta { font-size: 17px; }
+.contato-insta a { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--torra); vertical-align: middle; }
 
 /* ---------- modo escuro: só as partes claras escurecem; os blocos de cor ficam ---------- */
 @media (prefers-color-scheme: dark) {
@@ -260,3 +266,4 @@ section[id], #topo { scroll-margin-top: 96px; }
 .mais[open] { margin-bottom: 4px; }
 
 @media (prefers-color-scheme: dark) { .topo { background: #1c120b; color: #f2e9dc; border-bottom-color: #3d2b1f; } .topo .nav a { color: #f2e9dc; } .marca { color: var(--menta); } .idioma { background: var(--menta); color: var(--tinta); } }
+@media (prefers-color-scheme: dark) { .contato-insta a { color: #e0b58a; } }
