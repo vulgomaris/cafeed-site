@@ -278,16 +278,19 @@ section[id], #topo { scroll-margin-top: 96px; }
   background: repeating-conic-gradient(var(--torra) 0 25%, var(--menta) 0 50%) 0 0 / 72px 72px;
   border: 3px solid var(--tinta); border-radius: 36px; box-shadow: 10px 10px 0 var(--tinta); transform: rotate(-3deg);
 }
-.fim { background: repeating-conic-gradient(var(--torra) 0 25%, var(--menta) 0 50%) 0 0 / 96px 96px; }
-.fim .largura { background: var(--espuma); border: 3px solid var(--tinta); border-radius: 36px; box-shadow: 12px 12px 0 var(--tinta); padding: 48px; max-width: 1000px; }
+/* "Puxa uma cadeira": toalha caramelo, mais suave, e a seção mais compacta */
+.fim { background: repeating-conic-gradient(#e6c49c 0 25%, var(--leite) 0 50%) 0 0 / 72px 72px; padding: 56px 0; }
+.fim .largura { background: var(--espuma); border: 3px solid var(--tinta); border-radius: 32px; box-shadow: 10px 10px 0 var(--tinta); padding: 36px 40px; max-width: 900px; }
+.fim .cartaz { font-size: clamp(40px, 6.4vw, 84px); }
+.fim-frase { margin: 14px 0 22px; }
 @media (max-width: 700px) {
   .hero-cena::before { inset: 4% 0 0 4%; background-size: 48px 48px; border-radius: 28px; }
-  .fim { background-size: 64px 64px; padding: 56px 0; }
-  .fim .largura { width: auto; margin: 0 16px; padding: 28px 22px; border-radius: 28px; box-shadow: 8px 8px 0 var(--tinta); }
+  .fim { background-size: 56px 56px; padding: 40px 0; }
+  .fim .largura { width: auto; margin: 0 16px; padding: 26px 20px; border-radius: 26px; box-shadow: 7px 7px 0 var(--tinta); }
 }
 @media (prefers-color-scheme: dark) {
-  .hero-cena::before, .fim { background-image: repeating-conic-gradient(#3a2a1f 0 25%, var(--menta) 0 50%); }
-  .hero-cena::before { border-color: var(--menta); box-shadow: 10px 10px 0 #000; }
-  .fim .largura { background: #1c120b; border-color: var(--menta); box-shadow: 12px 12px 0 #000; }
+  .hero-cena::before { background-image: repeating-conic-gradient(#4a3424 0 25%, #2a1c13 0 50%); border-color: var(--menta); box-shadow: 10px 10px 0 #000; }
+  .fim { background-image: repeating-conic-gradient(#4a3424 0 25%, #2a1c13 0 50%); }
+  .fim .largura { background: #1c120b; border-color: var(--menta); box-shadow: 10px 10px 0 #000; }
   .fim .cartaz, .fim-frase { color: #f2e9dc; }
 }
