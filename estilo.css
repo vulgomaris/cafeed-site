@@ -289,7 +289,7 @@ section[id], #topo { scroll-margin-top: 96px; }
   .fim .largura { width: auto; margin: 0 16px; padding: 26px 20px; border-radius: 26px; box-shadow: 7px 7px 0 var(--tinta); }
 }
 @media (prefers-color-scheme: dark) {
-  .hero-cena::before { background-image: repeating-conic-gradient(#4a3424 0 25%, #2a1c13 0 50%); border-color: var(--menta); box-shadow: 10px 10px 0 #000; }
+  .hero-cena::before { background-image: repeating-conic-gradient(#3a2a1f 0 25%, var(--menta) 0 50%); border-color: var(--menta); box-shadow: 10px 10px 0 #000; }
   .fim { background-image: repeating-conic-gradient(#4a3424 0 25%, #2a1c13 0 50%); }
   .fim .largura { background: #1c120b; border-color: var(--menta); box-shadow: 10px 10px 0 #000; }
   .fim .cartaz, .fim-frase { color: #f2e9dc; }
