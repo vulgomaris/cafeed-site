@@ -44,7 +44,7 @@ a:focus-visible { outline: 3px solid var(--tinta); outline-offset: 3px; border-r
 /* ---------- faixa que corre ---------- */
 .faixa { background: var(--tinta); color: var(--menta); overflow: hidden; white-space: nowrap; font-family: var(--cartaz); font-weight: 600; font-size: 13px; text-transform: lowercase; letter-spacing: 0.01em; }
 .faixa-trilho { display: inline-flex; align-items: center; gap: 18px; padding: 9px 0; }
-.faixa-caneca { width: 18px; height: auto; flex: none; }
+.faixa-simbolo { width: 24px; height: auto; flex: none; color: #cafeed; }
 @media (prefers-reduced-motion: no-preference) {
   .faixa-trilho { animation: correr 40s linear infinite; }
 }
