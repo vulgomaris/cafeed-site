@@ -1,0 +1,214 @@
+// CAFEED — função "relatorio-admin"
+// Manda para quem é admin o relatório com os números do Cafeed:
+//   { "tipo": "semanal" }  todo sábado de manhã (pg_cron, supabase/relatorios.sql)
+//   { "tipo": "mensal" }   no último dia do mês, às 18h (pg_cron chama nos dias 28 a 31; só manda se amanhã for dia 1)
+// Cada relatório sai uma vez só por período (tabela relatorios_enviados), então chamar de novo não repete o e-mail.
+// Teste: um admin logado chama com { "tipo": "semanal", "teste": true } e recebe só ele, na hora, sem marcar nada.
+//
+// Segredos (Supabase → Edge Functions → Secrets), os mesmos das outras funções de e-mail:
+//   GMAIL_USUARIO   = cafeedclub@gmail.com
+//   GMAIL_SENHA_APP = a senha de app do Google
+// A chave interna (SUPABASE_SERVICE_ROLE_KEY) já vem com a função no Supabase; ela só é usada aqui dentro.
+// Ao criar a função no Supabase, desligue "Verify JWT" (o agendamento chama sem login).
+import { createClient } from 'npm:@supabase/supabase-js@2.45.4';
+import nodemailer from 'npm:nodemailer@6.9.16';
+
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+};
+const resposta = (corpo: unknown, status = 200) => new Response(JSON.stringify(corpo), { status, headers: { ...CORS, 'Content-Type': 'application/json' } });
+const esc = (t: string) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+const num = (n: number) => Number(n ?? 0).toLocaleString('pt-BR');
+
+// data de hoje em Brasília
+function hojeSP() {
+  const p = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' }).formatToParts(new Date());
+  const v = (k: string) => p.find((x) => x.type === k)!.value;
+  return { iso: `${v('year')}-${v('month')}-${v('day')}`, ano: +v('year'), mes: +v('month'), dia: +v('day'), semana: v('weekday') };
+}
+const ultimoDiaDoMes = (ano: number, mes: number) => new Date(Date.UTC(ano, mes, 0)).getUTCDate();
+const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+const dataBR = (iso: string) => iso.slice(8, 10) + '/' + iso.slice(5, 7);
+
+type Dados = Record<string, any>;
+
+// a chave interna do projeto (o nome mudou nas versões novas do Supabase; aceita os dois)
+function chaveInterna() {
+  const antiga = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+  if (antiga) return antiga;
+  try {
+    const novas = JSON.parse(Deno.env.get('SUPABASE_SECRET_KEYS') ?? '{}');
+    return (typeof novas === 'string' ? novas : novas.default ?? Object.values(novas)[0]) as string;
+  } catch {
+    return '';
+  }
+}
+
+// ---------- pedaços do e-mail (tabelas, para funcionar no Gmail, Outlook e Apple Mail) ----------
+const F = "font-family:'Bricolage Grotesque',Arial,Helvetica,sans-serif;";
+const T = "font-family:'Unbounded','Arial Black',Arial,sans-serif;";
+
+function variacao(atual: number, antes: number) {
+  if (!antes && !atual) return '<span style="color:#8a7b70">igual</span>';
+  if (!antes) return '<span style="color:#2e8b57">novo</span>';
+  const p = Math.round(((atual - antes) / antes) * 100);
+  if (p === 0) return '<span style="color:#8a7b70">igual</span>';
+  return p > 0 ? `<span style="color:#2e8b57">▲ ${p}%</span>` : `<span style="color:#c0392b">▼ ${Math.abs(p)}%</span>`;
+}
+
+function indicador(valor: string, rotulo: string, detalhe = '') {
+  return `<td width="50%" valign="top" style="padding:6px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fffdf8;border:1.5px solid #e5ddd5;border-radius:14px;">
+<tr><td style="padding:14px 16px 12px;">
+<div style="${T}font-weight:900;font-size:26px;line-height:30px;color:#2b1d14;">${valor}</div>
+<div style="${F}font-size:13.5px;line-height:18px;color:#6b5d52;margin-top:4px;">${rotulo}</div>
+${detalhe ? `<div style="${F}font-size:12.5px;line-height:17px;font-weight:700;margin-top:6px;">${detalhe}</div>` : ''}
+</td></tr></table></td>`;
+}
+const grade = (itens: string[]) => {
+  let h = '';
+  for (let i = 0; i < itens.length; i += 2) h += `<tr>${itens[i]}${itens[i + 1] ?? '<td width="50%"></td>'}</tr>`;
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${h}</table>`;
+};
+
+// gráfico de barras feito de tabela (aparece igual em qualquer programa de e-mail)
+function grafico(titulo: string, serie: { rotulo: string; v: number }[], nota: string) {
+  const maior = Math.max(1, ...serie.map((s) => s.v));
+  const alt = 120;
+  const colunas = serie.map((s, i) => {
+    const h = Math.max(3, Math.round((s.v / maior) * alt));
+    const cor = i === serie.length - 1 ? '#6f4e37' : '#cafeed';
+    return `<td valign="bottom" align="center" style="padding:0 3px;">
+<div style="${F}font-size:11.5px;font-weight:700;color:#2b1d14;margin-bottom:4px;">${s.v ? num(s.v) : ''}</div>
+<div style="height:${h}px;line-height:${h}px;font-size:1px;background:${cor};border:1.5px solid #2b1d14;border-radius:6px 6px 0 0;">&nbsp;</div></td>`;
+  }).join('');
+  const rotulos = serie.map((s) => `<td align="center" style="${F}font-size:11px;color:#8a7b70;padding:6px 2px 0;">${esc(s.rotulo)}</td>`).join('');
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fffdf8;border:1.5px solid #e5ddd5;border-radius:16px;">
+<tr><td style="padding:18px 18px 4px;${F}font-size:16px;font-weight:700;color:#2b1d14;">${titulo}</td></tr>
+<tr><td style="padding:0 18px 10px;${F}font-size:12.5px;color:#8a7b70;">${nota}</td></tr>
+<tr><td style="padding:6px 14px 16px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="table-layout:fixed;"><tr style="height:${alt + 20}px;">${colunas}</tr><tr>${rotulos}</tr></table></td></tr>
+</table>`;
+}
+
+function lista(titulo: string, itens: { nome: string; n: number }[], vazio: string, unidade: string) {
+  const linhas = itens.length
+    ? itens.map((x, i) => `<tr><td style="${F}font-size:14.5px;color:#2b1d14;padding:7px 0;border-top:${i ? '1px solid #efe7de' : '0'};">${i + 1}. ${esc(x.nome)}</td><td align="right" style="${F}font-size:14px;font-weight:700;color:#6f4e37;padding:7px 0;border-top:${i ? '1px solid #efe7de' : '0'};white-space:nowrap;">${num(x.n)} ${unidade}</td></tr>`).join('')
+    : `<tr><td style="${F}font-size:14px;color:#8a7b70;padding:6px 0;">${vazio}</td></tr>`;
+  return `<td width="50%" valign="top" style="padding:6px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fffdf8;border:1.5px solid #e5ddd5;border-radius:14px;">
+<tr><td style="padding:14px 16px 4px;${F}font-size:15px;font-weight:700;color:#2b1d14;">${titulo}</td></tr>
+<tr><td style="padding:0 16px 10px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">${linhas}</table></td></tr></table></td>`;
+}
+
+const secao = (t: string) => `<tr><td class="miolo" style="padding:26px 34px 6px;${T}font-weight:900;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:#6f4e37;">${t}</td></tr>`;
+const bloco = (h: string) => `<tr><td class="miolo" style="padding:0 28px;">${h}</td></tr>`;
+
+function montar(d: Dados) {
+  const mensal = d.tipo === 'mensal';
+  const h = hojeSP();
+  const titulo = mensal ? `O mês de ${MESES[h.mes - 1]} no Cafeed` : 'A semana no Cafeed';
+  const periodo = mensal ? `${MESES[h.mes - 1]} de ${h.ano} (até hoje, comparado com o mês anterior)` : `${dataBR(d.inicio)} a ${dataBR(d.hoje)} (comparado com os 7 dias anteriores)`;
+  const cresc = d.contas_antes ? Math.round(((d.contas - d.contas_antes) / d.contas_antes) * 100) : null;
+  const serie = (d.serie ?? []) as { rotulo: string; novas: number; total: number; ativos: number }[];
+  const serieUsada = mensal ? serie.filter((s) => s.total > 0) : serie;
+
+  const destaques = grade([
+    indicador(num(d.contas), 'contas no total', cresc === null ? '' : `<span style="color:#2e8b57">+${num(d.novas)} no período (${cresc}%)</span>`),
+    indicador(num(d.novas), mensal ? 'contas novas no mês' : 'contas novas na semana', variacao(d.novas, d.novas_ant)),
+    indicador(num(d.ativos), mensal ? 'pessoas ativas no mês' : 'pessoas ativas na semana', variacao(d.ativos, d.ativos_ant)),
+    indicador(d.retencao_7 == null ? '—' : d.retencao_7 + '%', 'voltam depois de 7 dias', d.retencao_30 == null ? '' : `<span style="color:#6b5d52">${d.retencao_30}% depois de 30 dias</span>`),
+  ]);
+  const uso = grade([
+    indicador(num(d.posts), 'posts', variacao(d.posts, d.posts_ant)),
+    indicador(num(d.visitas), 'cafés marcados como visitados', variacao(d.visitas, d.visitas_ant)),
+    indicador(num(d.interacoes), 'curtidas e comentários', variacao(d.interacoes, d.interacoes_ant)),
+    indicador(num(d.mensagens), 'mensagens trocadas'),
+    indicador(num(d.conexoes), 'novas conexões (seguir)'),
+    indicador(num(d.convites), 'amigos que entraram por convite'),
+    indicador(num(d.selos), 'selos ganhos no passaporte'),
+    indicador(num(d.cafes_novos), 'cafés cadastrados pela comunidade'),
+  ]);
+  const listas = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+${lista('Cafés mais movimentados', d.top_cafes ?? [], 'Nenhum café com visita ou post no período.', '')}
+${lista('De onde vêm as contas novas', d.top_cidades ?? [], 'Nenhuma conta nova com cidade no período.', '')}
+</tr></table>`;
+  const graficoNovas = grafico(mensal ? 'Contas novas por mês' : 'Contas novas por dia', serieUsada.map((s) => ({ rotulo: s.rotulo, v: s.novas })), mensal ? 'Desde o primeiro mês do Cafeed. A barra marrom é o mês atual.' : 'Últimos 7 dias. A barra marrom é hoje.');
+  const graficoAtivos = grafico(mensal ? 'Pessoas ativas por mês' : 'Pessoas ativas por dia', serieUsada.map((s) => ({ rotulo: s.rotulo, v: s.ativos })), '"Ativa" é quem entrou ou fez alguma coisa no app: post, curtida, comentário, visita, seguir ou mensagem.');
+  const graficoTotal = mensal ? grafico('Contas no total', serieUsada.map((s) => ({ rotulo: s.rotulo, v: s.total })), 'Crescimento acumulado, mês a mês.') : '';
+  const atencao = `${num(d.pendencias)} ${d.pendencias === 1 ? 'item espera' : 'itens esperam'} no Painel admin (denúncias e cafés para aprovar)` + (d.fundadores_restantes > 0 ? ` · ${num(d.fundadores_restantes)} vagas restantes na Turma fundadora` : '');
+
+  return `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>${esc(titulo)}</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@800;900&family=Bricolage+Grotesque:wght@400;600;700&display=swap" rel="stylesheet">
+<style>body{margin:0;padding:0;background:#f7f1ea}@media (max-width:600px){.caixa{width:100%!important;border-radius:0!important;border-left:0!important;border-right:0!important}.miolo{padding-left:14px!important;padding-right:14px!important}}</style></head>
+<body style="margin:0;padding:0;background:#f7f1ea;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f7f1ea;"><tr><td align="center" style="padding:28px 10px;">
+<table role="presentation" class="caixa" width="620" cellpadding="0" cellspacing="0" border="0" style="width:620px;max-width:620px;background:#f7f1ea;border:2px solid #2b1d14;border-radius:24px;overflow:hidden;">
+<tr><td style="background:#2b1d14;padding:26px 34px 24px;" class="miolo">
+<img src="https://kwyzxtjmdydctqcegapv.supabase.co/storage/v1/object/public/email/logo-cafeed.png" width="120" height="60" alt="Cafeed" style="display:block;width:120px;height:60px;border:0;background:#cafeed;border-radius:12px;padding:6px 10px;">
+<div style="${T}font-weight:900;font-size:26px;line-height:30px;color:#cafeed;margin-top:18px;text-transform:uppercase;letter-spacing:-0.5px;">${esc(titulo)}</div>
+<div style="${F}font-size:14px;line-height:20px;color:#c9bcb0;margin-top:6px;">${esc(periodo)} · só para admins</div>
+</td></tr>
+${secao('Crescimento')}${bloco(destaques)}
+${secao('Gráficos')}${bloco(graficoNovas)}<tr><td style="height:12px;font-size:1px;">&nbsp;</td></tr>${bloco(graficoAtivos)}${graficoTotal ? '<tr><td style="height:12px;font-size:1px;">&nbsp;</td></tr>' + bloco(graficoTotal) : ''}
+${secao('Uso do app')}${bloco(uso)}
+${secao('Destaques')}${bloco(listas)}
+<tr><td class="miolo" style="padding:22px 34px 8px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#cafeed;border:1.5px solid #2b1d14;border-radius:14px;"><tr><td style="padding:14px 16px;${F}font-size:14px;line-height:20px;color:#2b1d14;"><b>Para olhar:</b> ${atencao}.</td></tr></table></td></tr>
+<tr><td class="miolo" style="padding:18px 34px 30px;" align="left"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="background:#6f4e37;border:2px solid #2b1d14;border-radius:14px;"><a href="https://www.cafeedclub.com/app/admin" style="display:inline-block;padding:13px 24px;${T}font-weight:800;font-size:14px;color:#cafeed;text-decoration:none;text-transform:uppercase;">Abrir o Painel admin</a></td></tr></table>
+<p style="margin:16px 0 0;${F}font-size:12px;line-height:18px;color:#8a7b70;">Relatório automático do Cafeed, mandado só para as contas de admin. Os números contam todas as contas, menos o que já foi apagado.</p></td></tr>
+</table></td></tr></table></body></html>`;
+}
+
+function textoSimples(d: Dados) {
+  return `${d.tipo === 'mensal' ? 'Relatório do mês' : 'Relatório da semana'} do Cafeed
+Contas: ${d.contas} (novas: ${d.novas}) · Ativas: ${d.ativos} · Posts: ${d.posts} · Visitas: ${d.visitas} · Curtidas e comentários: ${d.interacoes}
+Painel admin: https://www.cafeedclub.com/app/admin`;
+}
+
+Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
+  if (req.method !== 'POST') return resposta({ erro: 'Use POST' }, 405);
+  let corpo: { tipo?: string; teste?: boolean } = {};
+  try { corpo = await req.json(); } catch { /* vazio */ }
+  const tipo = corpo.tipo === 'mensal' ? 'mensal' : 'semanal';
+  const url = Deno.env.get('SUPABASE_URL')!;
+  const interno = createClient(url, chaveInterna(), { auth: { persistSession: false } });
+
+  let para: string[] = [];
+  const h = hojeSP();
+  if (corpo.teste) {
+    // teste: só um admin logado, e o e-mail vai só para ele
+    const autorizacao = req.headers.get('Authorization') ?? '';
+    const comoUsuario = createClient(url, req.headers.get('apikey') ?? Deno.env.get('SUPABASE_ANON_KEY') ?? '', { global: { headers: { Authorization: autorizacao } } });
+    const { data: u } = await comoUsuario.auth.getUser();
+    const { data: admin } = await comoUsuario.rpc('sou_admin');
+    if (!u?.user?.email || admin !== true) return resposta({ erro: 'Só para admins.' }, 403);
+    para = [u.user.email];
+  } else {
+    // agendado: só no dia certo e uma vez por período
+    if (tipo === 'semanal' && h.semana !== 'Sat') return resposta({ ok: true, enviado: false, motivo: 'hoje não é sábado' });
+    if (tipo === 'mensal' && h.dia !== ultimoDiaDoMes(h.ano, h.mes)) return resposta({ ok: true, enviado: false, motivo: 'hoje não é o último dia do mês' });
+    const periodo = tipo === 'mensal' ? h.iso.slice(0, 7) : h.iso;
+    const { data: marcou, error } = await interno.rpc('marcar_relatorio', { p_tipo: tipo, p_periodo: periodo });
+    if (error) return resposta({ erro: error.message }, 500);
+    if (marcou !== true) return resposta({ ok: true, enviado: false, motivo: 'já enviado' });
+  }
+
+  const { data: dados, error } = await interno.rpc('relatorio_admin', { p_tipo: tipo });
+  if (error || !dados) return resposta({ erro: error?.message ?? 'sem dados' }, 500);
+  if (!corpo.teste) para = (dados.admins ?? []) as string[];
+  if (!para.length) return resposta({ ok: true, enviado: false, motivo: 'nenhum admin' });
+
+  const remetente = Deno.env.get('GMAIL_USUARIO');
+  const senha = Deno.env.get('GMAIL_SENHA_APP');
+  if (!remetente || !senha) return resposta({ erro: 'faltam os segredos do Gmail' }, 500);
+  const assunto = tipo === 'mensal' ? `Cafeed: os números de ${MESES[h.mes - 1]}` : `Cafeed: a semana em números (${dataBR(dados.inicio)} a ${dataBR(dados.hoje)})`;
+  try {
+    const correio = nodemailer.createTransport({ host: 'smtp.gmail.com', port: 465, secure: true, auth: { user: remetente, pass: senha } });
+    await correio.sendMail({ from: `Cafeed <${remetente}>`, to: remetente, bcc: para.join(', '), subject: (corpo.teste ? '[teste] ' : '') + assunto, html: montar(dados), text: textoSimples(dados) });
+    return resposta({ ok: true, enviado: true, para: para.length });
+  } catch (e) {
+    console.error('relatório não saiu:', e);
+    return resposta({ ok: false, enviado: false }, 500);
+  }
+});
