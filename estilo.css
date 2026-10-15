@@ -127,6 +127,11 @@ section[id], #topo { scroll-margin-top: 96px; }
 .usar span { font-size: 13px; }
 .usar strong { font-family: var(--cartaz); font-size: 22px; font-weight: 900; letter-spacing: -0.02em; text-transform: uppercase; }
 .usar:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--tinta); text-decoration: none; }
+/* o convite da abertura: um botão só, escuro sobre o menta, para não ter dúvida de onde tocar */
+.usar-hero { max-width: 380px; min-height: 72px; background: var(--tinta); color: var(--menta); border-color: var(--tinta); box-shadow: 5px 5px 0 var(--torra); }
+.usar-hero span { color: var(--espuma); font-size: 14px; }
+.usar-hero strong { font-size: 26px; }
+.usar-hero:hover { box-shadow: 7px 7px 0 var(--torra); }
 @media (prefers-reduced-motion: reduce) { .usar { transition: none; } .usar:hover { transform: none; } }
 
 /* ---------- o que dá para fazer: blocos de cor ---------- */
