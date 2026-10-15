@@ -86,6 +86,10 @@ section[id], #topo { scroll-margin-top: 96px; }
 .hero .l2 { color: var(--torra); }
 .hero .l3 { color: var(--espuma); -webkit-text-stroke: 3px var(--tinta); paint-order: stroke fill; }
 .hero-frase { font-size: clamp(19px, 2.2vw, 23px); line-height: 1.4; font-weight: 500; max-width: 30ch; margin: 22px 0 26px; }
+/* quantos cafés tem no mapa: a prova logo antes do convite para baixar */
+.hero-numero { display: flex; align-items: flex-start; gap: 10px; max-width: 34ch; margin: -8px 0 26px; font-size: 17px; line-height: 1.45; font-weight: 500; }
+.hero-numero svg { flex: none; margin-top: 1px; color: var(--tinta); }
+.hero-numero strong { font-family: var(--cartaz); font-weight: 800; font-size: 0.98em; letter-spacing: -0.01em; }
 
 .hero-cena { position: relative; height: min(118vw, 560px); max-width: 520px; width: 100%; justify-self: center; }
 .cel { position: absolute; width: 47%; height: auto; filter: drop-shadow(0 22px 30px rgba(43, 29, 20, 0.35)); }
