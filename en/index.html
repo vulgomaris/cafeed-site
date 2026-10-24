@@ -18,7 +18,7 @@
 <link rel="alternate" hreflang="en" href="https://www.cafeedclub.com/en/">
 <link rel="alternate" hreflang="es" href="https://www.cafeedclub.com/es/">
 <link rel="preload" href="../fontes/unbounded.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../estilo.css?v=d0e6dd85">
+<link rel="stylesheet" href="../estilo.css?v=8b7d3f7f">
 </head>
 <body id="topo" class="pg-inicio">
 <a class="pular" href="#conteudo">Skip to content</a>
@@ -49,8 +49,8 @@
 </div>
     </div>
     <div class="hero-cena" aria-hidden="false">
-      <img class="cel cel-tras" src="../img/mapa.webp" alt="Cafeed map with café mugs" width="540" height="1096">
-      <img class="cel cel-frente" src="../img/feed.webp" alt="Cafeed feed with café posts from people nearby" width="540" height="1096" fetchpriority="high">
+      <img class="cel cel-tras" src="../img/en/mapa.webp" alt="Cafeed map with café mugs" width="540" height="1096">
+      <img class="cel cel-frente" src="../img/en/feed.webp" alt="Cafeed feed with café posts from people nearby" width="540" height="1096" fetchpriority="high">
       <svg class="selo" viewBox="0 0 200 200" aria-hidden="true">
 <defs><path id="selo-c" d="M100,100 m-72,0 a72,72 0 1,1 144,0 a72,72 0 1,1 -144,0"/></defs>
 <circle cx="100" cy="100" r="96" fill="#c98b4f"/>
@@ -64,38 +64,69 @@
 <section class="recursos" id="o-app" aria-labelledby="t-recursos">
   <div class="largura">
     <h2 id="t-recursos" class="cartaz cartaz-m">All things coffee, in one app</h2>
-    <ul class="blocos">
-<li class="bloco bloco-torra">
-<h3>Find cafés near you</h3>
-<p>Every little mug on the map is a café. Tap it to see the address, how many people have been and what they shared.</p>
-<img src="../img/mapa.webp" alt="Map screen with café mugs" width="540" height="1096" loading="lazy" decoding="async">
+    <div class="vitrine bloco-torra" aria-roledescription="carousel" aria-label="App screens">
+<ul class="slides">
+<li class="slide ativo" data-cor="torra" id="tela-mapa">
+<div class="slide-texto"><p class="slide-conta">1 / 6</p><h3>Find cafés near you</h3><p>Every little mug on the map is a café. Tap it to see the address, how many people have been and what they shared.</p></div>
+<img src="../img/en/mapa.webp" alt="Map screen with café mugs" width="540" height="1096" decoding="async">
 </li>
-<li class="bloco bloco-caramelo">
-<h3>Save the ones you want to try</h3>
-<p>Mark the cafés you have visited and build your list of what is next.</p>
-<img src="../img/cafe.webp" alt="Café page with the visited and want to go buttons" width="540" height="1096" loading="lazy" decoding="async">
+<li class="slide" data-cor="caramelo" id="tela-cafe" aria-hidden="true">
+<div class="slide-texto"><p class="slide-conta">2 / 6</p><h3>Save the ones you want to try</h3><p>Mark the cafés you have visited and build your list of what is next.</p></div>
+<img src="../img/en/cafe.webp" alt="Café page with the visited and want to go buttons" width="540" height="1096" loading="lazy" decoding="async">
 </li>
-<li class="bloco bloco-tinta">
-<h3>Chat in the Community</h3>
-<p>Ask for a tip, share a find and answer the question of the week. You can tag who had coffee with you.</p>
-<img src="../img/comunidade.webp" alt="Community tab with the question of the week and conversations about cafés" width="540" height="1096" loading="lazy" decoding="async">
+<li class="slide" data-cor="tinta" id="tela-comunidade" aria-hidden="true">
+<div class="slide-texto"><p class="slide-conta">3 / 6</p><h3>Chat in the Community</h3><p>Ask for a tip, share a find and answer the question of the week. You can tag who had coffee with you.</p></div>
+<img src="../img/en/comunidade.webp" alt="Community tab with the question of the week and conversations about cafés" width="540" height="1096" loading="lazy" decoding="async">
 </li>
-<li class="bloco bloco-leite">
-<h3>Build your top 10</h3>
-<p>Drag to reorder and share it with your friends.</p>
-<img src="../img/ranking.webp" alt="Ranking screen with favourite cafés in order" width="540" height="1096" loading="lazy" decoding="async">
+<li class="slide" data-cor="leite" id="tela-ranking" aria-hidden="true">
+<div class="slide-texto"><p class="slide-conta">4 / 6</p><h3>Build your top 10</h3><p>Drag to reorder and share it with your friends.</p></div>
+<img src="../img/en/ranking.webp" alt="Ranking screen with favourite cafés in order" width="540" height="1096" loading="lazy" decoding="async">
 </li>
-<li class="bloco bloco-torra">
-<h3>Plan the next coffee</h3>
-<p>Send a café or a post to a friend and go together.</p>
-<img src="../img/conversa.webp" alt="Chat between friends planning a coffee" width="540" height="1096" loading="lazy" decoding="async">
+<li class="slide" data-cor="torra" id="tela-conversa" aria-hidden="true">
+<div class="slide-texto"><p class="slide-conta">5 / 6</p><h3>Plan the next coffee</h3><p>Send a café or a post to a friend and go together.</p></div>
+<img src="../img/en/conversa.webp" alt="Chat between friends planning a coffee" width="540" height="1096" loading="lazy" decoding="async">
 </li>
-<li class="bloco bloco-caramelo">
-<h3>Collect stamps</h3>
-<p>Every café you visit, every post and your ranking count towards the stamps in your coffee Passport.</p>
-<img src="../img/passaporte.webp" alt="Coffee Passport with the stamps earned" width="540" height="1096" loading="lazy" decoding="async">
+<li class="slide" data-cor="caramelo" id="tela-passaporte" aria-hidden="true">
+<div class="slide-texto"><p class="slide-conta">6 / 6</p><h3>Collect stamps</h3><p>Every café you visit, every post and your ranking count towards the stamps in your coffee Passport.</p></div>
+<img src="../img/en/passaporte.webp" alt="Coffee Passport with the stamps earned" width="540" height="1096" loading="lazy" decoding="async">
 </li>
-    </ul>
+</ul>
+<div class="vitrine-controles">
+<button type="button" class="seta" data-passo="-1" aria-label="Previous screen"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 5 L8 12 L15 19" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+<button type="button" class="seta" data-passo="1" aria-label="Next screen"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 5 L16 12 L9 19" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+<div class="pontos"><button type="button" class="ponto" data-ir="0" aria-label="Find cafés near you" aria-current="true"></button><button type="button" class="ponto" data-ir="1" aria-label="Save the ones you want to try"></button><button type="button" class="ponto" data-ir="2" aria-label="Chat in the Community"></button><button type="button" class="ponto" data-ir="3" aria-label="Build your top 10"></button><button type="button" class="ponto" data-ir="4" aria-label="Plan the next coffee"></button><button type="button" class="ponto" data-ir="5" aria-label="Collect stamps"></button></div>
+</div>
+</div>
+<script>
+(function () {
+  var v = document.querySelector('.vitrine'); if (!v) return;
+  var s = v.querySelectorAll('.slide'), p = v.querySelectorAll('.ponto'), i = 0, n = s.length;
+  function ir(k, dir) {
+    k = (k + n) % n; if (k === i) return;
+    s[i].classList.remove('ativo', 'vindo-esq', 'vindo-dir'); s[i].setAttribute('aria-hidden', 'true'); p[i].removeAttribute('aria-current');
+    v.classList.remove('bloco-' + s[i].dataset.cor);
+    i = k;
+    s[i].classList.add('ativo', dir < 0 ? 'vindo-esq' : 'vindo-dir'); s[i].removeAttribute('aria-hidden'); p[i].setAttribute('aria-current', 'true');
+    v.classList.add('bloco-' + s[i].dataset.cor);
+    var img = s[(i + 1) % n].querySelector('img'); if (img) img.loading = 'eager';
+  }
+  v.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.passo) ir(i + Number(b.dataset.passo), Number(b.dataset.passo));
+    else if (b.dataset.ir) ir(Number(b.dataset.ir), Number(b.dataset.ir) - i);
+  });
+  v.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') { ir(i + 1, 1); e.preventDefault(); }
+    if (e.key === 'ArrowLeft') { ir(i - 1, -1); e.preventDefault(); }
+  });
+  var x0 = null;
+  v.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  v.addEventListener('touchend', function (e) {
+    if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 45) ir(i + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+  });
+})();
+</script>
   </div>
 </section>
 

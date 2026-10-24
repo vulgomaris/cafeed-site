@@ -18,7 +18,7 @@
 <link rel="alternate" hreflang="en" href="https://www.cafeedclub.com/en/">
 <link rel="alternate" hreflang="es" href="https://www.cafeedclub.com/es/">
 <link rel="preload" href="../fontes/unbounded.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../estilo.css?v=d0e6dd85">
+<link rel="stylesheet" href="../estilo.css?v=8b7d3f7f">
 </head>
 <body id="topo" class="pg-inicio">
 <a class="pular" href="#conteudo">Saltar al contenido</a>
@@ -49,8 +49,8 @@
 </div>
     </div>
     <div class="hero-cena" aria-hidden="false">
-      <img class="cel cel-tras" src="../img/mapa.webp" alt="Mapa de Cafeed con las tacitas de los cafés" width="540" height="1096">
-      <img class="cel cel-frente" src="../img/feed.webp" alt="Feed de Cafeed con publicaciones de cafés de gente cercana" width="540" height="1096" fetchpriority="high">
+      <img class="cel cel-tras" src="../img/es/mapa.webp" alt="Mapa de Cafeed con las tacitas de los cafés" width="540" height="1096">
+      <img class="cel cel-frente" src="../img/es/feed.webp" alt="Feed de Cafeed con publicaciones de cafés de gente cercana" width="540" height="1096" fetchpriority="high">
       <svg class="selo" viewBox="0 0 200 200" aria-hidden="true">
 <defs><path id="selo-c" d="M100,100 m-72,0 a72,72 0 1,1 144,0 a72,72 0 1,1 -144,0"/></defs>
 <circle cx="100" cy="100" r="96" fill="#c98b4f"/>
@@ -64,38 +64,69 @@
 <section class="recursos" id="o-app" aria-labelledby="t-recursos">
   <div class="largura">
     <h2 id="t-recursos" class="cartaz cartaz-m">Todo sobre café, en una sola app</h2>
-    <ul class="blocos">
-<li class="bloco bloco-torra">
-<h3>Encuentra cafeterías cerca de ti</h3>
-<p>Cada tacita en el mapa es un café. Toca para ver la dirección, cuánta gente ya fue y qué compartió la comunidad.</p>
-<img src="../img/mapa.webp" alt="Pantalla del mapa con las tacitas de los cafés" width="540" height="1096" loading="lazy" decoding="async">
+    <div class="vitrine bloco-torra" aria-roledescription="carousel" aria-label="Pantallas de la app">
+<ul class="slides">
+<li class="slide ativo" data-cor="torra" id="tela-mapa">
+<div class="slide-texto"><p class="slide-conta">1 / 6</p><h3>Encuentra cafeterías cerca de ti</h3><p>Cada tacita en el mapa es un café. Toca para ver la dirección, cuánta gente ya fue y qué compartió la comunidad.</p></div>
+<img src="../img/es/mapa.webp" alt="Pantalla del mapa con las tacitas de los cafés" width="540" height="1096" decoding="async">
 </li>
-<li class="bloco bloco-caramelo">
-<h3>Guarda las que quieres conocer</h3>
-<p>Marca los cafés que ya visitaste y arma tu lista de los próximos.</p>
-<img src="../img/cafe.webp" alt="Página de un café con los botones de visitado y quiero conocer" width="540" height="1096" loading="lazy" decoding="async">
+<li class="slide" data-cor="caramelo" id="tela-cafe" aria-hidden="true">
+<div class="slide-texto"><p class="slide-conta">2 / 6</p><h3>Guarda las que quieres conocer</h3><p>Marca los cafés que ya visitaste y arma tu lista de los próximos.</p></div>
+<img src="../img/es/cafe.webp" alt="Página de un café con los botones de visitado y quiero conocer" width="540" height="1096" loading="lazy" decoding="async">
 </li>
-<li class="bloco bloco-tinta">
-<h3>Conversa en la Comunidad</h3>
-<p>Pide una recomendación, cuenta un hallazgo y responde la pregunta de la semana. Puedes etiquetar a quien tomó café contigo.</p>
-<img src="../img/comunidade.webp" alt="Pestaña Comunidad con la pregunta de la semana y conversaciones sobre cafés" width="540" height="1096" loading="lazy" decoding="async">
+<li class="slide" data-cor="tinta" id="tela-comunidade" aria-hidden="true">
+<div class="slide-texto"><p class="slide-conta">3 / 6</p><h3>Conversa en la Comunidad</h3><p>Pide una recomendación, cuenta un hallazgo y responde la pregunta de la semana. Puedes etiquetar a quien tomó café contigo.</p></div>
+<img src="../img/es/comunidade.webp" alt="Pestaña Comunidad con la pregunta de la semana y conversaciones sobre cafés" width="540" height="1096" loading="lazy" decoding="async">
 </li>
-<li class="bloco bloco-leite">
-<h3>Arma tu top 10</h3>
-<p>Arrastra para cambiar el orden y compártelo con tus amigos.</p>
-<img src="../img/ranking.webp" alt="Pantalla del ranking con los cafés favoritos en orden" width="540" height="1096" loading="lazy" decoding="async">
+<li class="slide" data-cor="leite" id="tela-ranking" aria-hidden="true">
+<div class="slide-texto"><p class="slide-conta">4 / 6</p><h3>Arma tu top 10</h3><p>Arrastra para cambiar el orden y compártelo con tus amigos.</p></div>
+<img src="../img/es/ranking.webp" alt="Pantalla del ranking con los cafés favoritos en orden" width="540" height="1096" loading="lazy" decoding="async">
 </li>
-<li class="bloco bloco-torra">
-<h3>Acuerda el próximo café</h3>
-<p>Envíale un café o una publicación a un amigo y vayan juntos.</p>
-<img src="../img/conversa.webp" alt="Conversación entre amigos acordando un café" width="540" height="1096" loading="lazy" decoding="async">
+<li class="slide" data-cor="torra" id="tela-conversa" aria-hidden="true">
+<div class="slide-texto"><p class="slide-conta">5 / 6</p><h3>Acuerda el próximo café</h3><p>Envíale un café o una publicación a un amigo y vayan juntos.</p></div>
+<img src="../img/es/conversa.webp" alt="Conversación entre amigos acordando un café" width="540" height="1096" loading="lazy" decoding="async">
 </li>
-<li class="bloco bloco-caramelo">
-<h3>Colecciona sellos</h3>
-<p>Cada café que visitas, cada publicación y tu ranking cuentan para los sellos de tu Pasaporte del café.</p>
-<img src="../img/passaporte.webp" alt="Pasaporte del café con los sellos ganados" width="540" height="1096" loading="lazy" decoding="async">
+<li class="slide" data-cor="caramelo" id="tela-passaporte" aria-hidden="true">
+<div class="slide-texto"><p class="slide-conta">6 / 6</p><h3>Colecciona sellos</h3><p>Cada café que visitas, cada publicación y tu ranking cuentan para los sellos de tu Pasaporte del café.</p></div>
+<img src="../img/es/passaporte.webp" alt="Pasaporte del café con los sellos ganados" width="540" height="1096" loading="lazy" decoding="async">
 </li>
-    </ul>
+</ul>
+<div class="vitrine-controles">
+<button type="button" class="seta" data-passo="-1" aria-label="Pantalla anterior"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 5 L8 12 L15 19" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+<button type="button" class="seta" data-passo="1" aria-label="Pantalla siguiente"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 5 L16 12 L9 19" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+<div class="pontos"><button type="button" class="ponto" data-ir="0" aria-label="Encuentra cafeterías cerca de ti" aria-current="true"></button><button type="button" class="ponto" data-ir="1" aria-label="Guarda las que quieres conocer"></button><button type="button" class="ponto" data-ir="2" aria-label="Conversa en la Comunidad"></button><button type="button" class="ponto" data-ir="3" aria-label="Arma tu top 10"></button><button type="button" class="ponto" data-ir="4" aria-label="Acuerda el próximo café"></button><button type="button" class="ponto" data-ir="5" aria-label="Colecciona sellos"></button></div>
+</div>
+</div>
+<script>
+(function () {
+  var v = document.querySelector('.vitrine'); if (!v) return;
+  var s = v.querySelectorAll('.slide'), p = v.querySelectorAll('.ponto'), i = 0, n = s.length;
+  function ir(k, dir) {
+    k = (k + n) % n; if (k === i) return;
+    s[i].classList.remove('ativo', 'vindo-esq', 'vindo-dir'); s[i].setAttribute('aria-hidden', 'true'); p[i].removeAttribute('aria-current');
+    v.classList.remove('bloco-' + s[i].dataset.cor);
+    i = k;
+    s[i].classList.add('ativo', dir < 0 ? 'vindo-esq' : 'vindo-dir'); s[i].removeAttribute('aria-hidden'); p[i].setAttribute('aria-current', 'true');
+    v.classList.add('bloco-' + s[i].dataset.cor);
+    var img = s[(i + 1) % n].querySelector('img'); if (img) img.loading = 'eager';
+  }
+  v.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.passo) ir(i + Number(b.dataset.passo), Number(b.dataset.passo));
+    else if (b.dataset.ir) ir(Number(b.dataset.ir), Number(b.dataset.ir) - i);
+  });
+  v.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') { ir(i + 1, 1); e.preventDefault(); }
+    if (e.key === 'ArrowLeft') { ir(i - 1, -1); e.preventDefault(); }
+  });
+  var x0 = null;
+  v.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  v.addEventListener('touchend', function (e) {
+    if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 45) ir(i + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+  });
+})();
+</script>
   </div>
 </section>
 
