@@ -162,9 +162,12 @@ a.idioma:hover { text-decoration: none; background: var(--torra); }
 .bloco-leite .seta:hover svg { color: var(--leite); }
 .seta:focus-visible, .ponto:focus-visible { outline: 3px solid var(--menta); outline-offset: 3px; }
 .bloco-leite .seta:focus-visible, .bloco-caramelo .seta:focus-visible, .bloco-leite .ponto:focus-visible, .bloco-caramelo .ponto:focus-visible { outline-color: var(--tinta); }
-.pontos { display: flex; gap: 8px; margin-left: auto; }
-.ponto { width: 10px; height: 10px; padding: 0; border-radius: 99px; border: 0; background: currentColor; opacity: .35; cursor: pointer; transition: width .3s ease, opacity .3s; }
-.ponto[aria-current] { width: 28px; opacity: 1; }
+.pontos { display: flex; align-items: center; gap: 2px; margin-left: auto; }
+/* grãozinhos de café marcam a tela que está aparecendo (igual às fotos dos posts no app) */
+.ponto { width: 18px; height: 24px; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; display: grid; place-items: center; }
+.ponto svg { width: 10px; height: auto; opacity: .4; transition: width .3s ease, opacity .3s; }
+.ponto[aria-current] svg { width: 15px; opacity: 1; }
+.ponto:hover svg { opacity: .75; }
 @media (min-width: 820px) {
   .vitrine { padding: 36px 56px; }
   .slide { grid-template-columns: 1fr 1fr; align-items: center; gap: 40px; }
@@ -177,10 +180,10 @@ a.idioma:hover { text-decoration: none; background: var(--torra); }
   .vitrine, .slide, .ponto { transition: none; }
   .slide.vindo-dir img, .slide.vindo-esq img { animation: none; }
 }
-.bloco-torra { background: var(--torra); color: var(--menta); }
-.bloco-caramelo { background: var(--caramelo); color: var(--tinta); }
-.bloco-leite { background: var(--leite); color: var(--tinta); }
-.bloco-tinta { background: var(--tinta); color: var(--menta); }
+.bloco-torra { --fundo: var(--torra); background: var(--torra); color: var(--menta); }
+.bloco-caramelo { --fundo: var(--caramelo); background: var(--caramelo); color: var(--tinta); }
+.bloco-leite { --fundo: var(--leite); background: var(--leite); color: var(--tinta); }
+.bloco-tinta { --fundo: var(--tinta); background: var(--tinta); color: var(--menta); }
 
 /* ---------- quem somos: a carta numa notinha ---------- */
 .quem { background: var(--torra); color: var(--menta); padding: 88px 0 96px; overflow: hidden; }
