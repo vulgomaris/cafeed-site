@@ -90,14 +90,7 @@ a.idioma:hover { text-decoration: none; opacity: .7; }
 .hero { background: var(--menta); color: var(--tinta); overflow: hidden; padding-bottom: 8px; }
 .hero-grade { display: grid; gap: 28px; padding-top: 28px; }
 .hero .cartaz { font-size: clamp(42px, 10.5vw, 84px); }
-/* cada linha do título numa linha só: o tamanho acompanha a largura da coluna (e o idioma, que muda o comprimento) */
-.hero-texto { container-type: inline-size; }
-.hero .cartaz span { display: block; white-space: nowrap; }
-@supports (font-size: 1cqi) {
-  .hero .cartaz { font-size: min(84px, 10.3cqi) !important; }
-  html[lang="en"] .hero .cartaz { font-size: min(84px, 9.2cqi) !important; }
-  html[lang="es"] .hero .cartaz { font-size: min(84px, 10.1cqi) !important; }
-}
+
 .hero .l1 { color: var(--tinta); }
 .hero .l2 { color: var(--torra); }
 .hero .l3 { color: var(--espuma); -webkit-text-stroke: 3px var(--tinta); paint-order: stroke fill; }
