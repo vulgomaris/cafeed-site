@@ -62,8 +62,10 @@ section[id], #topo { scroll-margin-top: 96px; }
 .nav { display: flex; align-items: center; gap: 2px; }
 .nav a { color: var(--tinta); text-decoration: none; font-weight: 600; font-size: 16px; padding: 10px 10px; white-space: nowrap; }
 .nav a:hover, .nav a[aria-current] { text-decoration: underline; text-decoration-thickness: 2px; }
-.idioma { text-decoration: none; font-family: var(--cartaz); font-weight: 800; font-size: 13px; background: var(--tinta); color: var(--menta); border-radius: 999px; padding: 8px 13px; margin-left: 6px; }
-.idioma:hover { text-decoration: none; background: var(--torra); }
+.idiomas { display: flex; align-items: center; margin-left: 6px; background: var(--tinta); border-radius: 999px; padding: 3px; flex: none; }
+.idioma { text-decoration: none; font-family: var(--cartaz); font-weight: 800; font-size: 12px; color: var(--menta); border-radius: 999px; padding: 6px 9px; line-height: 1; }
+a.idioma:hover { text-decoration: none; background: var(--torra); }
+.idioma[aria-current] { background: var(--menta); color: var(--tinta); }
 /* Entrar: abre o app no navegador */
 .entrar { text-decoration: none; font-weight: 700; font-size: 15px; color: var(--tinta); background: var(--menta); border: 2px solid var(--tinta); border-radius: 999px; padding: 6px 14px; margin-left: 8px; white-space: nowrap; }
 .entrar:hover { background: #b3f3dd; }
@@ -72,7 +74,7 @@ section[id], #topo { scroll-margin-top: 96px; }
 @media (max-width: 760px) {
   .topo-linha { flex-wrap: wrap; gap: 0 12px; padding-top: 10px; }
   .topo-linha .entrar { margin-left: auto; }
-  .topo-linha .idioma { margin-left: 6px; }
+  .topo-linha .idiomas { margin-left: 6px; }
   .topo-linha .nav { order: 3; width: calc(100% + 32px); margin: 0 -16px; padding: 0 10px 6px; overflow-x: auto; flex-wrap: nowrap; justify-content: flex-start; scrollbar-width: none; }
   .topo-linha .nav::-webkit-scrollbar { display: none; }
 }
@@ -275,7 +277,7 @@ section[id], #topo { scroll-margin-top: 96px; }
 .mais summary:focus-visible { outline: 3px solid var(--menta); outline-offset: 3px; border-radius: 6px; }
 .mais[open] { margin-bottom: 4px; }
 
-@media (prefers-color-scheme: dark) { .topo { background: #1c120b; color: #f2e9dc; border-bottom-color: #3d2b1f; } .topo .nav a { color: #f2e9dc; } .marca { color: var(--menta); } .idioma { background: var(--menta); color: var(--tinta); } }
+@media (prefers-color-scheme: dark) { .topo { background: #1c120b; color: #f2e9dc; border-bottom-color: #3d2b1f; } .topo .nav a { color: #f2e9dc; } .marca { color: var(--menta); } .idiomas { background: var(--menta); } .idioma { color: var(--tinta); } a.idioma:hover { background: #b3f3dd; } .idioma[aria-current] { background: var(--tinta); color: var(--menta); } }
 @media (prefers-color-scheme: dark) { .contato-insta a { color: #e0b58a; } }
 
 /* ---------- toalha xadrez da marca ---------- */
