@@ -1,0 +1,40 @@
+-- ============================================================
+-- CAFEED — "Ver tradução" nos posts, comentários e conversas
+-- A função traduzir (supabase/functions/traduzir) guarda cada tradução aqui, para o mesmo texto
+-- não ser traduzido duas vezes, e conta quantas traduções cada pessoa pediu no dia (até 300).
+-- Só a função (service role) lê e escreve. Pode rodar de novo.
+-- ============================================================
+create table if not exists public.traducoes (
+  chave text primary key,              -- sha-256 de "idioma|texto"
+  idioma text not null check (idioma in ('pt', 'en')),
+  traducao text not null,
+  mesma boolean not null default false, -- o texto já estava nesse idioma
+  criado_em timestamptz not null default now()
+);
+alter table public.traducoes enable row level security;
+
+create table if not exists public.traducoes_uso (
+  user_id uuid not null references auth.users (id) on delete cascade,
+  dia date not null default (now() at time zone 'America/Sao_Paulo')::date,
+  total integer not null default 0,
+  primary key (user_id, dia)
+);
+alter table public.traducoes_uso enable row level security;
+
+-- soma 1 e diz se ainda pode (a função chama com a chave interna)
+create or replace function public.contar_traducao(p_user uuid, p_limite integer default 300)
+returns boolean
+language plpgsql
+security definer set search_path = ''
+as $$
+declare
+  v integer;
+begin
+  insert into public.traducoes_uso (user_id, dia, total) values (p_user, (now() at time zone 'America/Sao_Paulo')::date, 1)
+  on conflict (user_id, dia) do update set total = public.traducoes_uso.total + 1
+  returning total into v;
+  delete from public.traducoes_uso where dia < (now() at time zone 'America/Sao_Paulo')::date - 7;
+  return v <= p_limite;
+end;
+$$;
+revoke execute on function public.contar_traducao(uuid, integer) from public, anon, authenticated;
