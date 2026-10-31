@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Garimpo do Threads · Cafeed</title>
+<link rel="icon" href="/favicon.png">
+<style>
+  :root { --menta:#CAFEED; --torra:#6F4E37; --tinta:#2B1D14; --creme:#F7F1EA; --leite:#F3E6D0; --texto:#6B5D52; --perigo:#C0392B; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--creme); color:var(--tinta); font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; }
+  header { background:var(--tinta); color:var(--menta); padding:18px 16px; }
+  header h1 { margin:0; font-size:22px; letter-spacing:-0.5px; }
+  header p { margin:4px 0 0; color:#c9bcb0; font-size:14px; }
+  main { max-width:760px; margin:0 auto; padding:20px 16px 60px; }
+  .status { font-size:14px; color:var(--texto); margin-bottom:14px; }
+  .status b { color:var(--tinta); }
+  form { display:flex; gap:8px; flex-wrap:wrap; }
+  input[type=text] { flex:1 1 260px; padding:12px 14px; border:2px solid var(--tinta); border-radius:12px; font-size:16px; background:#fff; }
+  select { padding:12px; border:2px solid var(--tinta); border-radius:12px; font-size:15px; background:#fff; }
+  button { padding:12px 18px; border:2px solid var(--tinta); border-radius:12px; background:var(--torra); color:#fff; font-weight:700; font-size:15px; cursor:pointer; }
+  button:disabled { opacity:.5; cursor:default; }
+  .atalhos { display:flex; gap:6px; flex-wrap:wrap; margin:12px 0 20px; }
+  .atalhos button { background:var(--menta); color:var(--tinta); padding:6px 12px; font-size:13px; border-radius:999px; }
+  .post { background:#fff; border:2px solid var(--tinta); border-radius:16px; padding:14px 16px; margin-bottom:12px; }
+  .post .quem { font-weight:700; }
+  .post .quando { color:var(--texto); font-size:13px; margin-left:6px; }
+  .post p { margin:8px 0 10px; white-space:pre-wrap; line-height:1.45; }
+  .post a { color:var(--torra); font-weight:700; }
+  .aviso { background:var(--leite); border:2px solid var(--tinta); border-radius:14px; padding:14px 16px; line-height:1.5; }
+  .erro { color:var(--perigo); font-weight:600; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Garimpo do Threads</h1>
+  <p>Busca conversas de gente procurando cafeteria, para a equipe do Cafeed indicar cafés. Só leitura: nada é postado daqui.</p>
+</header>
+<main>
+  <div class="status" id="status">Conferindo seu login no Cafeed...</div>
+  <div id="area" hidden>
+    <form id="busca">
+      <input type="text" id="q" value="indica cafeteria" aria-label="O que buscar no Threads">
+      <select id="tipo" aria-label="Ordem">
+        <option value="RECENT">Mais recentes</option>
+        <option value="TOP">Mais populares</option>
+      </select>
+      <button id="botao" type="submit">Buscar no Threads</button>
+    </form>
+    <div class="atalhos" id="atalhos"></div>
+    <div id="resultado"></div>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+  const URL_SUPABASE = 'https://kwyzxtjmdydctqcegapv.supabase.co';
+  const CHAVE = 'sb_publishable_s_UeMx8d2g3sljw4Q52Jlg_I9XvM_5r';
+  // mesmo login do app no navegador (www.cafeedclub.com/app)
+  const sb = supabase.createClient(URL_SUPABASE, CHAVE, { auth: { persistSession: true, autoRefreshToken: true } });
+  const ATALHOS = ['indica cafeteria', 'indicação de café', 'onde tomar café', 'cafeteria para trabalhar', 'melhor cafeteria', 'app de cafeteria'];
+  const $ = (id) => document.getElementById(id);
+  const esc = (t) => String(t ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
+  async function iniciar() {
+    const { data } = await sb.auth.getSession();
+    const sessao = data.session;
+    if (!sessao) {
+      $('status').innerHTML = '<div class="aviso">Entre na sua conta do Cafeed em <a href="/app">cafeedclub.com/app</a> e volte para esta página.</div>';
+      return;
+    }
+    const { data: admin } = await sb.rpc('sou_admin');
+    if (admin !== true) {
+      $('status').innerHTML = '<div class="aviso">Esta página é só para a equipe do Cafeed.</div>';
+      return;
+    }
+    $('status').innerHTML = 'Conectado ao Cafeed como <b>' + esc(sessao.user.email) + '</b>. As buscas usam a conta <b>@cafeedclub</b> do Threads.';
+    $('area').hidden = false;
+    ATALHOS.forEach((a) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = a;
+      b.onclick = () => { $('q').value = a; buscar(); };
+      $('atalhos').appendChild(b);
+    });
+  }
+
+  async function buscar(ev) {
+    if (ev) ev.preventDefault();
+    const q = $('q').value.trim();
+    if (q.length < 2) return;
+    $('botao').disabled = true;
+    $('resultado').innerHTML = '<p>Buscando...</p>';
+    const { data, error } = await sb.functions.invoke('threads-garimpo', { body: { q, tipo: $('tipo').value } });
+    $('botao').disabled = false;
+    if (error || !data || !data.ok) {
+      let msg = 'Não foi possível buscar agora.';
+      try { const corpo = await error?.context?.json(); if (corpo?.erro) msg = corpo.erro; } catch (_) {}
+      if (data?.erro) msg = data.erro;
+      $('resultado').innerHTML = '<p class="erro">' + esc(msg) + '</p>';
+      return;
+    }
+    if (!data.posts.length) {
+      $('resultado').innerHTML = '<p>Nenhuma conversa encontrada para "' + esc(q) + '".</p>';
+      return;
+    }
+    $('resultado').innerHTML = '<p>' + data.posts.length + ' conversas para "' + esc(q) + '":</p>' + data.posts.map((p) =>
+      '<div class="post"><span class="quem">@' + esc(p.autor) + '</span><span class="quando">' +
+      esc(p.quando ? new Date(p.quando).toLocaleString('pt-BR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '') +
+      '</span><p>' + esc(p.texto) + '</p>' +
+      (p.link ? '<a href="' + esc(p.link) + '" target="_blank" rel="noopener">Abrir no Threads</a>' : '') + '</div>'
+    ).join('');
+  }
+
+  $('busca').addEventListener('submit', buscar);
+  iniciar();
+</script>
+</body>
+</html>
