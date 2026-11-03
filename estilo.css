@@ -129,6 +129,8 @@ a.idioma:hover { text-decoration: none; opacity: .7; }
 /* Botões das lojas: por enquanto só "em breve" (não são links) */
 .lojas { display: flex; flex-wrap: wrap; gap: 12px; }
 .loja { margin: 0; flex: 1 1 150px; max-width: 220px; display: flex; flex-direction: column; justify-content: center; min-height: 58px; padding: 8px 18px; background: var(--tinta); color: var(--menta); border-radius: 16px; line-height: 1.1; box-shadow: 4px 4px 0 var(--torra); }
+a.loja { text-decoration: none; }
+a.loja:hover { transform: translate(-1px, -1px); }
 .loja span { font-size: 13px; }
 .loja strong { font-family: var(--cartaz); font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
 .lojas-escuras .loja { background: var(--menta); color: var(--tinta); box-shadow: 4px 4px 0 var(--caramelo); }
