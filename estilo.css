@@ -144,6 +144,16 @@ a.loja:hover { transform: translate(-1px, -1px); }
 .usar-hero span { color: var(--espuma); font-size: 14px; }
 .usar-hero strong { font-size: 26px; }
 .usar-hero:hover { box-shadow: 7px 7px 0 var(--torra); }
+/* abertura: três botões pequenos na mesma linha (App Store, Google Play, navegador) */
+.lojas-hero { flex-wrap: nowrap; gap: 8px; max-width: 460px; }
+.hero-btn { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; justify-content: center; min-height: 54px; padding: 7px 10px; background: var(--tinta); color: var(--menta); border-radius: 14px; line-height: 1.1; box-shadow: 3px 3px 0 var(--torra); text-decoration: none; transition: transform .12s ease, box-shadow .12s ease; }
+.hero-btn span { font-size: 11.5px; color: var(--espuma); white-space: nowrap; }
+.hero-btn strong { font-family: var(--cartaz); font-size: 15px; font-weight: 800; letter-spacing: -0.02em; white-space: nowrap; }
+.hero-btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--torra); text-decoration: none; }
+.hero-btn-web { background: var(--espuma); color: var(--tinta); border: 2px solid var(--tinta); box-shadow: 3px 3px 0 var(--tinta); }
+.hero-btn-web span { color: var(--tinta); }
+@media (max-width: 360px) { .hero-btn strong { font-size: 13px; } .hero-btn { padding: 7px 8px; } }
+@media (prefers-reduced-motion: reduce) { .hero-btn { transition: none; } .hero-btn:hover { transform: none; } }
 @media (prefers-reduced-motion: reduce) { .usar { transition: none; } .usar:hover { transform: none; } }
 
 /* ---------- o que dá para fazer: blocos de cor ---------- */
